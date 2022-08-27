@@ -80,7 +80,10 @@ namespace DungeonLibrary
                 Type,
                 IsTwoHanded ? "Two-Handed" : "One-Handed");
         }//end ToString()
-
-
+        public int IncDamage()
+        {
+            return MaxDamage + 10;
+            return MinDamage + 10;
+        }
     }
 }

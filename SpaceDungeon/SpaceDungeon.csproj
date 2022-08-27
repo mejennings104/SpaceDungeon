@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Windows.Extensions" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DungeonLibrary\DungeonLibrary.csproj" />
     <ProjectReference Include="..\MonsterLibrary\MonsterLibrary.csproj" />
   </ItemGroup>

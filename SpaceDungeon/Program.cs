@@ -1,5 +1,6 @@
 ﻿using DungeonLibrary;
 using MonsterLibrary;
+using System.Media;
 
 namespace SpaceDungeon
 {
@@ -7,10 +8,47 @@ namespace SpaceDungeon
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("-=-=-=SpaceDungeon=--=-=-");
+            Console.WriteLine($@" 
+                 <<<<<-=-=-= SpaceDungeon =-=-=->>>>>
+
+
+    .    * .    . *.    * .    . *    .    * .    . *.    * .    . *
+       * .  * .  .          |-----------| .  .  * .  .   * .  * .  .    * .
+                .  *   .  . |===========|  .  * .   . .  *  .   .      . *
+           |            ____|,---------.|___--~\__--. * .  .   * .   .  .    * .
+    #---,'''''`-_   `  /    |`---------'|    `       \    ,--~~  __-/~~--'_______
+       | ~~~~~~~~~|---~---/=| __________|=\---~-----~-----| .--~~  |  .__ |  ____|
+     -[|.-- ===|#####|-| |@@@@|+-+@@@| |]=###|/-++++-[| ||||___+_.  | `===='-.
+     -[| '==~' |#####|-| |@@@@|+-+@@@| |]=###|\-++++-[| ||||~~~+~'  | ,====.-'
+       | _________ | ---u-- -\=| ~~~~~~~~~~~|=/ ---u---- - u---- -| '--__ |'~~||
+        \       /= -   `    |,---------.|  .    ` . *`    `--__  ~~-\__--.~~~~~'
+--- =:===\     /    .  . *  |`---------'|      .    .       .  ~~--_/~~--'
+     -- <:\___/ --   .      |===========|     *  .   .   *   *  .   .   * 
+                  .  .. *   |-----------| *  .   .   *   *  .   .   * 
+  *  .   .   *   *  .   .   |___________| * .  * .  .   * .  * .  .    * .  * .  
+         __  .   .   .    *    *    .    *     *    .    *    *    .    *
+ .  .    \ \_____      * .    . *    .    * .    . *.    * .    . *
+      ###[==_____>    .    *    *    .    *     *    .    *    *    .    *
+         /_/ _   * .    . *    .    * .    . *.    * .    . *   .   *
+    .       \ \_____  .    * .    . *.    * .    . *    .    * .    . *.    
+         ###[==_____>    * .  * .  .    * .  * .  .  * .  * .  .    * .  * .
+ .          /_/    *   *  .   .   *   *  .   .   *     *  .   .   *   *  . ");
+
+            SoundPlayer musicPlayer = new SoundPlayer();
+            musicPlayer.SoundLocation = AppDomain.CurrentDomain.BaseDirectory + "spacedungeon.wav";
+            musicPlayer.PlayLooping();//will repeat when finished. .Play() plays once and stops.
+
+
+            //implement Monster Tiers
+            //implement vending machine perks
+            //fix player info
+            //fix player death
+            //add more attributes to races
+            //make weapons selectable(?)
+            
 
             int score = 0;
-            int invGold = 10;
+            int invGold = 30;
 
 
             Weapon laserGun = new Weapon(10, 6, "Laser Gun", 8, false, WeaponType.LaserGun);
@@ -26,7 +64,7 @@ namespace SpaceDungeon
             Console.ReadLine();
             Console.Clear();
 
-            Console.WriteLine("Hey! You're finally awake! We need your help!" +
+            Console.WriteLine("\n\n Hey! You're finally awake! We need your help! " +
                 "What's your name?\n");
             string userName = Console.ReadLine();
             Console.WriteLine("\n\nWhat alien race are you?\n");
@@ -46,10 +84,11 @@ namespace SpaceDungeon
 
             Console.Clear();
 
-            Console.WriteLine("Well, " + userName + ", to fill you in on the situation,\n" +
-                "space monsters have boarded our spaceship and taken over the flight deck.\n" +
-                "You must head there and regain control of the ship. I must warn you, the \n" +
-                "enemies only get stronger the closer you get. Good luck.\n\n");
+            Console.WriteLine("Well, " + userName + ", to fill you in on the situation, you're a prisoner aboard a space dungeon.\n" +
+                "You got knocked out when space monsters started boarding our ship.They took over the flight deck\n" +
+                "So you must head there and regain control of the ship. I must warn you, the \n" +
+                "enemies only get stronger the closer you get so be sure to visit the\n" +
+                "vending machine between fights. Good luck.\n\n");
 
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("Press 'Enter' to Continue.");
@@ -60,93 +99,159 @@ namespace SpaceDungeon
 
             bool exit = false;
 
+            bool exitMenu = false;
 
+
+            #region Encounter (Next Room)
             do
             {
-                string room = GetRoom();
-                Console.WriteLine(room);
-               
+                Console.WriteLine("\nPlease select an option: \n" +
+                    "N) Next Room\n" +
+                    "V) Vending Machine\n" +
+                    "E) Exit\n\n");
+                string userChoice1 = Console.ReadKey(true).Key.ToString();
+                Console.Clear();
 
-                Monster monster = Monster.GetMonster();
-
-                Console.WriteLine("You've encountered " + monster.Name + "!");
-
-                bool reload = false;
-
-                do
+                switch (userChoice1)
                 {
-                    Console.WriteLine("\nPlease choose an action:\n" +
-                        "A) Attack\n" +
-                        "P) Player Info\n" +
-                        "M) Monster Info\n" +
-                        "R) Run Away\n" +
-                        "E) Exit\n");
-                    string userChoice2 = Console.ReadKey(true).Key.ToString();
-                    Console.Clear();
-                    switch (userChoice2)
-                    {
-                        case "A":
-                            Console.WriteLine("Attack!");
-                            Combat.DoBattle(player, monster);
-                            if (monster.Life > 0)
-                            {
-                                Combat.DoAttack(monster, player);
-                            }
-                            if (monster.Life <= 0)
-                            {
-                                score++;
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine($"\nYou killed {monster.Name}!\n\n");
-                                Console.ResetColor();
+                    case "N":
 
-                                Console.ForegroundColor = ConsoleColor.DarkGray;
-                                Console.WriteLine("Press 'Enter' to Continue.");
-                                Console.ResetColor();
-                                reload = true;
-                                Console.ReadLine();
-                                Console.Clear();
-                            }
-                            if (player.Life <= 0)
-                            {
-                                Console.WriteLine("You died!\a");
-                                exit = true;
-                            }
-                            break;
-                        case "P":
-                            Console.WriteLine("Player Info");
-                            Console.WriteLine(player);
-                            Console.WriteLine("Monsters Defeated: " + score);
-                            break;
+                        string room = GetRoom();
+                        Console.WriteLine(room);
 
-                        case "M":
-                            Console.WriteLine("Monster Info");
-                            Console.WriteLine(monster);
-                            break;
-                        case "R":
-                            Console.WriteLine("Run Away");
-                            Console.WriteLine($"{monster.Name} attacks you as you flee!");
-                            Combat.DoAttack(monster, player);
-                            reload = true;
+                        Monster monster = Monster.GetMonster();
+                        Console.WriteLine("You've encountered " + monster.Name + "!");
+
+
+                        bool reload = false;
+
+                        do
+                        {
+                            Console.WriteLine("\nPlease choose an action:\n" +
+                                "A) Attack\n" +
+                                "P) Player Info\n" +
+                                "M) Monster Info\n" +
+                                "R) Run Away\n" +
+                                "E) Exit\n");
+                            string userChoice2 = Console.ReadKey(true).Key.ToString();
                             Console.Clear();
-                            break;
-                        case "E":
-                            Console.WriteLine("The space monsters win this time.");
-                            exit = true;
-                            break;
-                        default:
-                            Console.WriteLine("Please try again...");
-                            break;
-                    }
-                } while (!exit && !reload);
-            } while (!exit);
-           
+                            switch (userChoice2)
+                            {
+                                case "A":
+                                    Console.WriteLine("Attack!");
+                                    Combat.DoBattle(player, monster);
+                                    if (monster.Life > 0 && score < 4)
+                                    {
+                                        Combat.DoAttack(monster, player);
+                                    }
+                                    if (monster.Life <= 0)
+                                    {
+                                        score++;
+                                        invGold += 10;
+                                        Console.ForegroundColor = ConsoleColor.Green;
+                                        Console.WriteLine($"\nYou killed {monster.Name}!\n\n");
+                                        Console.ResetColor();
+
+                                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                                        Console.WriteLine("Press 'Enter' to Continue.");
+                                        Console.ResetColor();
+                                        reload = true;
+                                        Console.ReadLine();
+                                        Console.Clear();
+                                    }
+                                    if (player.Life <= 0)
+                                    {
+                                        Console.WriteLine("You died!\a");
+                                        exit = true;
+                                    }
+                                    break;
+                                case "P":
+                                    Console.WriteLine("Player Info");
+                                    Console.WriteLine(player);
+                                    Console.WriteLine("Monsters Defeated: " + score);
+                                    Console.WriteLine(invGold + " Gold");
+                                    break;
+
+                                case "M":
+                                    Console.WriteLine("Monster Info");
+                                    Console.WriteLine(monster);
+                                    break;
+                                case "R":
+                                    Console.WriteLine("Run Away");
+                                    Console.WriteLine($"{monster.Name} attacks you as you flee!");
+                                    Combat.DoAttack(monster, player);
+                                    //reload = false;
+                                    Console.Clear();
+                                    break;
+                                case "E":
+                                    Console.WriteLine("The space monsters win this time.");
+                                    exit = true;
+                                    break;
+                                default:
+                                    Console.WriteLine("Please try again...");
+                                    break;
+                            }
+                        } while (!exit && !reload);
+
+                        break;
+                    case "V":
+                        bool reloadVend = false;
+                        do
+                        {
+                            int v1 = 20;
+                            int v2 = 30;
+                            int v3 = 40;
+                            Console.WriteLine($"What would you like to do?\n" +
+                                "1) 20 Gold: Heal +30hp\n" +
+                                "2) 30 Gold: Increase Damage + 10\n" +
+                                "3) 40 Gold: Increase Max Health + 20\n" +
+                                "4) Go Back\n\n" +
+                                "You have " + invGold + " Gold\n");
+
+
+
+                            string vendChoice = Console.ReadLine();
+                            Console.Clear();
+
+                            if (vendChoice == "1" && invGold >= v1)
+                            {
+
+                                invGold -= 20;
+                                Console.WriteLine("You healed yourself");
+
+                                reloadVend = true;
+                            }
+                            if (vendChoice == "2" && invGold >= v2)
+                            {
+                                invGold -= 30;
+                                Console.WriteLine($"{laserGun.IncDamage}");
+                                Console.WriteLine("Damage has been increased!");
+                            }
+                            if (vendChoice == "3" && invGold >= v3)
+                            {
+                                Console.WriteLine("Your Max Health has been increased!");
+                            }
+                            else if (vendChoice == "4")
+                            {
+                                reloadVend = true;
+                            }
+                        } while (!reloadVend);
+
+                        break;
+                }
+            } while (!exitMenu);
+            #endregion
         }
         private static string GetRoom()
         {
             string[] rooms =
             {
-                "The room is a room",
-                "The room is not a room"
+                "There's space debris all over this room",
+                "You're in the hallway",
+                "You're in the hangar",
+                "Why is there blood everywhere?",
+                "You found a spacedungeon cell",
+                "There's sticky stuff everywhere!"
 
             };
             return rooms[new Random().Next(rooms.Length)];

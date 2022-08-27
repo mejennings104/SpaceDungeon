@@ -64,11 +64,12 @@ Description:
             Monster2 spacePirate = new Monster2("Space Pirate", 45, 45, 80, 9, 15, 18, "Arrrggghh!");
             Monster2 spaceDino = new Monster2("Space Dino", 50, 50, 70, 5, 20, 24, "You thought they were extinct...");
 
-            List<Monster2> monsters = new List<Monster2>()
+            List<Monster2> monsters2 = new List<Monster2>()
             {
-                spacePirate, spaceDino
+                spacePirate, 
+                spaceDino
             };
-            return monsters[new Random().Next(monsters.Count)];
+            return monsters2[new Random().Next(monsters2.Count)];
 
         }
 
